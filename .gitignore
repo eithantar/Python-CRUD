@@ -1,0 +1,12 @@
+# Secrets — copy .env.example to .env locally
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Unrelated large files kept locally
+Python-3.12.0/
+Python-3.12.0.tgz

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="page-head">
+    <div>
+      <h1>Students</h1>
+      <p class="muted">
+        {% if q %}{{ students|length }} result{{ '' if students|length == 1 else 's' }} for “{{ q }}”
+        {% else %}{{ students|length }} registered student{{ '' if students|length == 1 else 's' }}{% endif %}
+      </p>
+    </div>
+    <form class="search" role="search" action="{{ url_for('list_students') }}" method="get">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" name="q" value="{{ q or '' }}" placeholder="Search name, email, phone, major" aria-label="Search students" />
+      {% if q %}<a class="search-clear" href="{{ url_for('list_students') }}" aria-label="Clear search">&times;</a>{% endif %}
+    </form>
+  </div>
+
+  {% if students %}
+    <div class="card table-card">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Phone</th>
+            <th>Major</th>
+            <th>Registered</th>
+            <th class="right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in students %}
+            <tr>
+              <td data-label="Student">
+                <div class="person">
+                  <span class="avatar" data-seed="{{ s.id }}">{{ (s.full_name.split()|map('first')|list)[:2]|join|upper }}</span>
+                  <div>
+                    <div class="person-name">{{ s.full_name }}</div>
+                    <a class="person-email" href="mailto:{{ s.email }}">{{ s.email }}</a>
+                  </div>
+                </div>
+              </td>
+              <td data-label="Phone">{{ s.phone or '—' }}</td>
+              <td data-label="Major">{% if s.major %}<span class="badge">{{ s.major }}</span>{% else %}<span class="muted">—</span>{% endif %}</td>
+              <td data-label="Registered" class="muted">{{ s.created_at.strftime('%b %d, %Y') if s.created_at else '—' }}</td>
+              <td class="right actions">
+                <a class="btn btn-ghost btn-sm" href="{{ url_for('edit_student', student_id=s.id) }}">Edit</a>
+                <form action="{{ url_for('delete_student', student_id=s.id) }}" method="post" class="inline"
+                      data-confirm="Delete {{ s.full_name }}? This cannot be undone.">
+                  <button type="submit" class="btn btn-danger-ghost btn-sm">Delete</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="card empty">
+      <div class="empty-icon">{{ '🔍' if q else '🎓' }}</div>
+      {% if q %}
+        <h2>No matches</h2>
+        <p class="muted">No students match “{{ q }}”.</p>
+        <a class="btn btn-ghost" href="{{ url_for('list_students') }}">Clear search</a>
+      {% else %}
+        <h2>No students yet</h2>
+        <p class="muted">Register your first student to get started.</p>
+        <a class="btn btn-primary" href="{{ url_for('create_student') }}">+ Add student</a>
+      {% endif %}
+    </div>
+  {% endif %}
+{% endblock %}

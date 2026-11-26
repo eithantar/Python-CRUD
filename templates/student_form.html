@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% set is_edit = student is not none %}
+{% block title %}{{ 'Edit' if is_edit else 'Add' }} student{% endblock %}
+{% block content %}
+  {% set form = form or {} %}
+  <a class="back-link" href="{{ url_for('list_students') }}">&larr; Back to students</a>
+
+  <div class="card form-card">
+    <div class="form-head">
+      <h1>{{ 'Edit student' if is_edit else 'Add a student' }}</h1>
+      <p class="muted">{{ 'Update the details below.' if is_edit else 'Fields marked * are required.' }}</p>
+    </div>
+
+    <form method="post" id="studentForm" novalidate>
+      <div class="form-grid">
+        <div class="field">
+          <label for="full_name">Full name <span class="req">*</span></label>
+          <input id="full_name" type="text" name="full_name" required maxlength="255" autocomplete="name"
+                 value="{{ form.full_name or '' }}" placeholder="Jane Doe" {{ 'autofocus' if not is_edit }} />
+          <small class="error-text"></small>
+        </div>
+        <div class="field">
+          <label for="email">Email <span class="req">*</span></label>
+          <input id="email" type="email" name="email" required maxlength="255" autocomplete="email"
+                 value="{{ form.email or '' }}" placeholder="jane@example.com" />
+          <small class="error-text"></small>
+        </div>
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input id="phone" type="tel" name="phone" maxlength="30" autocomplete="tel"
+                 value="{{ form.phone or '' }}" placeholder="+81-90-1234-5678" />
+          <small class="error-text"></small>
+        </div>
+        <div class="field">
+          <label for="major">Major</label>
+          <input id="major" type="text" name="major" maxlength="100"
+                 value="{{ form.major or '' }}" placeholder="Computer Science" />
+          <small class="error-text"></small>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a class="btn btn-ghost" href="{{ url_for('list_students') }}">Cancel</a>
+        <button type="submit" class="btn btn-primary">{{ 'Save changes' if is_edit else 'Create student' }}</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}
