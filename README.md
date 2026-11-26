@@ -79,6 +79,3 @@ student_crud_flask/
 - Email is unique; attempting to add a duplicate will show an error.
 - To use a different DB name, update `.env` and `schema.sql` consistently.
 - For production, set a strong `FLASK_SECRET` and place the app behind a real web server (e.g., nginx + gunicorn).
-
-## License
-MIT
